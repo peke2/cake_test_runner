@@ -1,0 +1,6 @@
+.git*
+logs
+exclude_upload
+upload.sh
+*.bak
+*.tmp
