@@ -20,28 +20,33 @@ end
 #	p element
 #}
 
-doc = Nokogiri::HTML(open("http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php?case=controllers%2Fmemos_controller.test.php&app=true"))
-
-doc.xpath('//hs/a').each do |link|
-	p link.content
+doc = Nokogiri::HTML::Document.new()
+top_node = doc.parse(open("http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php?case=controllers%2Fmemos_controller.test.php&app=true"))
+#node = top_node.root()
+top_node.each do |node|
+	print node
 end
 
-
-class	MyDoc < Nokogiri::XML::SAX::Document
-	def	start_element(name, attributes=[])
-		p "found #{name}"
-		p "attr=#{attributes}"
-	end
-
-	def	end_element(name)
-		p "end #{name}"
-	end
+#doc.xpath('//hs/a').each do |link|
+#	p link.content
+#end
 
 
-	def	characters(string)
-		p "chars=#{string}"
-	end
-end
-
-parser = Nokogiri::HTML::SAX::Parser.new(MyDoc.new)
-parser.parse(readHTTP("http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php?case=controllers%2Fmemos_controller.test.php&app=true"))
+#class	MyDoc < Nokogiri::XML::SAX::Document
+#	def	start_element(name, attributes=[])
+#		p "found #{name}"
+#		p "attr=#{attributes}"
+#	end
+#
+#	def	end_element(name)
+#		p "end #{name}"
+#	end
+#
+#
+#	def	characters(string)
+#		p "chars=#{string}"
+#	end
+#end
+#
+#parser = Nokogiri::HTML::SAX::Parser.new(MyDoc.new)
+#parser.parse(readHTTP("http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php?case=controllers%2Fmemos_controller.test.php&app=true"))
