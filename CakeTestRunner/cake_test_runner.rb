@@ -120,28 +120,25 @@ class	CakeTestRunner
 	#
 	#	エラー、テスト失敗の数を取得
 	#
-	def	getErrorCount
+	def	getCountByTypeName(type_name)
 		count = 0
 		@testcases.each do |testcase|
 			testcase.error_infos.each do |error_info|
-				if( error_info.type == "error" )
+				if( error_info.type == type_name )
 					count += 1
 				end
 			end
 		end
 		return	count
 	end
+	private	:getCountByTypeName
+
+	def	getErrorCount
+		return	getCountByTypeName("error")
+	end
 
 	def	getFailureCount
-		count = 0
-		@testcases.each do |testcase|
-			testcase.error_infos.each do |error_info|
-				if( error_info.type == "fail" )
-					count += 1
-				end
-			end
-		end
-		return	count
+		return	getCountByTypeName("fail")
 	end
 
 end
