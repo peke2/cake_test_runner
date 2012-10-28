@@ -72,6 +72,38 @@ doc.xpath("//li[@class='error' or @class='fail']//div[@class='msg']").each do |n
 end
 
 
+#	出力してみる
+doc = Nokogiri::XML::Document.new
+doc.encoding = "utf-8"
+
+top_node = Nokogiri::XML::Node.new("testsuite", doc)
+top_node["errors"] = "1"
+top_node["failures"] = "1"
+top_node["tests"] = "2"
+top_node["time"] = "0.056"
+top_node["timestamp"] = "2012-10-28T19:45:00"
+doc.add_child(top_node)
+
+node = Nokogiri::XML::Node.new("testcase", doc)
+node["classname"] = "DummyClass"
+node["name"] = "dummyMethod"
+node["time"] = "0.0345"
+top_node.add_child(node)
+
+error_node = Nokogiri::XML::Node.new("error", doc)
+error_node["message"] = "ERROR"
+error_node.content = "Syntax error on DummyFile.php in line 123"
+node.add_child(error_node)
+
+error_node = Nokogiri::XML::Node.new("failure", doc)
+error_node["message"] = "FAILURE"
+error_node.content = "Assertion failed"
+node.add_child(error_node)
+
+
+io = File.open("output.xml", "w")
+doc.write_xml_to(io)
+io.close()
 
 #class	MyDoc < Nokogiri::XML::SAX::Document
 #	def	start_element(name, attributes=[])
