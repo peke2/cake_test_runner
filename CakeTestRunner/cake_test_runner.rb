@@ -2,7 +2,7 @@ require "nokogiri"
 
 class	CakeTestRunner
 	TESTCASE = Struct.new(:classname, :methodname, :time, :error_infos)
-	ERRORINFO = Struct.new(:type, :descripiton)
+	ERRORINFO = Struct.new(:type, :description)
 
 	@testcases
 
@@ -35,15 +35,16 @@ class	CakeTestRunner
 	def	retrieveResult(result_text)
 		doc = Nokogiri::HTML(result_text)
 
+		test_case = TESTCASE.new
+
 		#<div  class="test-results"><h2>Individual test case: controllers/memos_controller.test.php</h2>
 		doc.xpath("//div[@class='test-results']").each do |node|
 			#とりあえず、最初に見つけた1つのみを取得
 			#実際は単体でテストを起動するので1つしか無い気がする
-			test_case = TESTCASE.new
 			test_case.classname = node.content
 			test_case.error_infos = Array.new
 
-			@testcases << testcase
+			@testcases << test_case
 			break
 		end
 
@@ -123,15 +124,24 @@ class	CakeTestRunner
 		count = 0
 		@testcases.each do |testcase|
 			testcase.error_infos.each do |error_info|
-				error 
+				if( error_info.type == "error" )
+					count += 1
+				end
 			end
 		end
-		return	
+		return	count
 	end
 
-	def	getFaiureCount
+	def	getFailureCount
+		count = 0
+		@testcases.each do |testcase|
+			testcase.error_infos.each do |error_info|
+				if( error_info.type == "fail" )
+					count += 1
+				end
+			end
+		end
+		return	count
 	end
 
-	private	:getErrorCount
-	private	:getFaiureCount
 end
