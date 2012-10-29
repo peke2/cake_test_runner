@@ -60,25 +60,13 @@ class	CakeTestRunner
 			error_info = ERRORINFO.new()
 
 			parent_node = node.parent()
-		#	printf("paren name=[%s]\n", parent_node.node_name())
 			attr = "class"
-		#	printf("attribute [%s]=[%s]\n", attr, parent_node.get_attribute(attr))
 			error_info.type = parent_node.get_attribute(attr)
-
-			#	エラーが発生した行
-		#	print node.content
-		#	print "\n"
-			
 
 			#	詳細情報？
 			#	ノードの設定を表示してみたら「兄弟」ではなく「子供」だった…
 			#	構造上、どうみても対象ノードの子供では無いような気がするのだが…
-		#	print("-------- [next] --------\n");
-			#next_node = node.next_sibling()
 			next_node = node.next_element()
-		#	p next_node
-		#	print next_node.content
-		#	print "\n\n"
 
 			error_info.description = node.content + "\n" + next_node.content
 
@@ -97,36 +85,22 @@ class	CakeTestRunner
 		top_node = Nokogiri::XML::Node.new("testsuite", doc)
 		top_node["errors"] = getErrorCount().to_s
 		top_node["failures"] = getFailureCount().to_s
-		top_node["tests"] = "*"
+		top_node["tests"] = @testcases.length.to_s
 		top_node["time"] = "0.056"
 		top_node["timestamp"] = @test_date
 		doc.add_child(top_node)
 
-		#node = Nokogiri::XML::Node.new("testcase", doc)
-		#node["classname"] = "DummyClass"
-		#node["name"] = "dummyMethod"
-		#node["time"] = "0.0345"
-		#top_node.add_child(node)
-
-		#error_node = Nokogiri::XML::Node.new("error", doc)
-		#error_node["message"] = "ERROR"
-		#error_node.content = "Syntax error on DummyFile.php in line 123"
-		#node.add_child(error_node)
-
-		#error_node = Nokogiri::XML::Node.new("failure", doc)
-		#error_node["message"] = "FAILURE"
-		#error_node.content = "Assertion failed"
-		#node.add_child(error_node)
-
 		@testcases.each do |testcase|
 			node = Nokogiri::XML::Node.new("testcase", doc)
-			node["classname"] = testcase.classname
+			names = testcase.classname.split(/\./)
+			node["classname"] = names[0]
 			#node["name"]      = testcase.methodname
 			#node["time"]      = testcase.time
 			top_node.add_child(node)
 
 			testcase.error_infos.each do |error_info|
-				error_node = Nokogiri::XML::Node.new(error_info.type, doc)
+				tag_name = getTagNameByType(error_info.type)
+				error_node = Nokogiri::XML::Node.new(tag_name, doc)
 				error_node["message"] = error_info.type
 				error_node.content = error_info.description
 				node.add_child(error_node)
@@ -144,6 +118,15 @@ class	CakeTestRunner
 	#
 	def	convertDateTime(datetime)
 		return	datetime.iso8601
+	end
+
+
+	#
+	#	種類によって名前を
+	#
+	def	getTagNameByType(type_name)
+		name_table = {"fail" => "failure", "error" => "error"}
+		return	name_table[type_name]
 	end
 
 
