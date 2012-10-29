@@ -27,7 +27,9 @@ end
 #	print node
 #end
 
-url = "http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php?case=controllers%2Fmemos_controller.test.php&app=true"
+#url = "http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php?case=controllers%2Fmemos_controller.test.php&app=true"
+#url = "http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php?case=controllers%2Fmemos_controller.test.php&show_passes=1"
+url = "http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php?app=true&case=controllers/memos_controller.test.php&show_passes=1"
 
 result_text = readHTTP(url)
 io = File.open("result.txt", "w")
@@ -48,10 +50,20 @@ end
 
 print("\n\n")
 
+#	成功メッセージを取り出す
+print("-------- [Succeeded] --------\n")
+doc.xpath("//ul[@class='tests']//li[@class='pass']").each do |node|
+	#	テスト時に出力されたテキストを取得
+	print node.content
+	print "\n"
+end
+
+print("\n\n")
+
 #	エラーメッセージを取り出す
 print("-------- [Errors] --------\n")
 
-doc.xpath("//li[@class='error' or @class='fail']//div[@class='msg']").each do |node|
+doc.xpath("//li[@class='error' or @class='fail' or @class='pass']//div[@class='msg']").each do |node|
 	parent_node = node.parent()
 	printf("paren name=[%s]\n", parent_node.node_name())
 	attr = "class"

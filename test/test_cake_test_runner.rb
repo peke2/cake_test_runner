@@ -28,6 +28,11 @@ class TestCakeTestRunner < Test::Unit::TestCase
 		io.close()
 
 		@cake_test_runner.retrieveResult(text, Time.now)
+
+		assert_equal(1, @cake_test_runner.getErrorCount())
+		assert_equal(2, @cake_test_runner.getFailureCount())
+		assert_equal(1, @cake_test_runner.getPassCount())
+
 		@cake_test_runner.outputResult("test_result.xml")
 	end
 
@@ -55,6 +60,9 @@ class TestCakeTestRunner < Test::Unit::TestCase
 		result = @cake_test_runner.getTagNameByType("error")
 		assert_equal("error", result)
 
+		result = @cake_test_runner.getTagNameByType("pass")
+		assert_equal("passed", result)
+
 		result = @cake_test_runner.getTagNameByType(nil)
 		assert_equal(nil, result)
 
@@ -62,4 +70,18 @@ class TestCakeTestRunner < Test::Unit::TestCase
 		assert_equal(nil, result)
 	end
 
+	#	正常のタグかどうかをチェック
+	def	test_isSucceededTag
+		result = @cake_test_runner.isSucceededTag("passed")
+		assert(result == true)
+
+		result = @cake_test_runner.isSucceededTag(nil)
+		assert(result == false)
+
+		result = @cake_test_runner.isSucceededTag('error')
+		assert(result == false)
+
+		result = @cake_test_runner.isSucceededTag('failure')
+		assert(result == false)
+	end
 end

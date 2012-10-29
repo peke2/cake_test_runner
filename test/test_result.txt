@@ -123,7 +123,10 @@
 </div>
 <div  class="test-results"><h2>Individual test case: controllers/memos_controller.test.php</h2>
 <ul class='tests'>
-method &lt;start&gt; is started.<br>method &lt;start&gt; is ended.<br>method &lt;startCase&gt; is started.<br>method &lt;startCase&gt; is ended.<br>method &lt;testSample&gt; is started.<br><li class='error'>
+method &lt;start&gt; is started.<br>method &lt;start&gt; is ended.<br>method &lt;startCase&gt; is started.<br>method &lt;startCase&gt; is ended.<br>method &lt;testSample&gt; is started.<br><li class='pass'>
+<span>Passed</span> /var/www/htdocs/peke2/project/cake/memo/app/tests/cases/controllers/memos_controller.test.php -&gt; MemosControllerTest<br /> at [/var/www/htdocs/peke2/project/cake/memo/app/tests/cases/controllers/memos_controller.test.php line 17]
+</li>
+<li class='error'>
 <span>Error</span><div class='msg'>Unexpected PHP error [Undefined index: test] severity [E_NOTICE] in [/var/www/htdocs/peke2/project/cake/memo/app/tests/cases/controllers/memos_controller.test.php line 20]</div>
 <div>/var/www/htdocs/peke2/project/cake/memo/app/tests/cases/controllers/memos_controller.test.php -&gt; MemosControllerTest</div>
 </li>
