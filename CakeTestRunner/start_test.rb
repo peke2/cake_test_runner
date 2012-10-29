@@ -1,5 +1,5 @@
 require './cake_test_runner'
-require '
+require 'uri'
 
 url = "http://192.168.56.102/peke2/project/cake/memo/app/webroot/test.php"
 params = "app=true"

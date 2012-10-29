@@ -49,6 +49,7 @@ class	CakeTestRunner
 			#とりあえず、最初に見つけた1つのみを取得
 			#実際は単体でテストを起動するので1つしか無い気がする
 			test_case.classname = node.content
+			test_case.methodname = "method"			#	仮のメソッド名を設定
 			test_case.error_infos = Array.new
 
 			@testcases << test_case
@@ -91,19 +92,30 @@ class	CakeTestRunner
 		doc.add_child(top_node)
 
 		@testcases.each do |testcase|
-			node = Nokogiri::XML::Node.new("testcase", doc)
-			names = testcase.classname.split(/\./)
-			node["classname"] = names[0]
-			#node["name"]      = testcase.methodname
-			#node["time"]      = testcase.time
-			top_node.add_child(node)
+			if testcase.error_infos == nil
 
-			testcase.error_infos.each do |error_info|
-				tag_name = getTagNameByType(error_info.type)
-				error_node = Nokogiri::XML::Node.new(tag_name, doc)
-				error_node["message"] = error_info.type
-				error_node.content = error_info.description
-				node.add_child(error_node)
+				node = Nokogiri::XML::Node.new("testcase", doc)
+				names = testcase.classname.split(/\./)
+				node["classname"] = names[0]
+				node["name"]      = testcase.methodname
+				#node["time"]      = testcase.time
+				top_node.add_child(node)
+			elsif
+				
+				testcase.error_infos.each do |error_info|
+					node = Nokogiri::XML::Node.new("testcase", doc)
+					names = testcase.classname.split(/\./)
+					node["classname"] = names[0]
+					node["name"]      = testcase.methodname
+					#node["time"]      = testcase.time
+					top_node.add_child(node)
+
+					tag_name = getTagNameByType(error_info.type)
+					error_node = Nokogiri::XML::Node.new(tag_name, doc)
+					error_node["message"] = error_info.type
+					error_node.content = error_info.description
+					node.add_child(error_node)
+				end
 			end
 		end
 
