@@ -68,7 +68,7 @@ class	CakeTestRunner
 		doc.xpath("//div[@class='test-results']/h2").each do |node|
 			#とりあえず、最初に見つけた1つのみを取得
 			#実際は単体でテストを起動するので1つしか無い気がする
-			test_case.classname = node.content
+			test_case.classname = node.content.sub(/Individual test case: /, '')
 			test_case.methodname = "method"			#	仮のメソッド名を設定
 			test_case.test_infos = Array.new
 
