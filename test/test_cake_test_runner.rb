@@ -84,4 +84,49 @@ class TestCakeTestRunner < Test::Unit::TestCase
 		result = @cake_test_runner.isSucceededTag('failure')
 		assert(result == false)
 	end
+
+	#
+	#	引数からテスト対象を取得する
+	#
+	def	test_retrieveTestTarget
+		argv = ["test/sample", "controllers/get_unit", "models/share"]
+		result = @cake_test_runner.retrieveTestTarget(argv)
+		assert_equal(argv, argv)
+	end
+
+	#	ファイル指定オプション付き
+	def	test_retrieveTestTargetWithFileOption
+		argv = ["test/sample", "-f", "target_file_list.txt" , "controllers/get_unit", "models/share"]
+		result = @cake_test_runner.retrieveTestTarget(argv)
+
+		expects = ["test/sample", "components/map", "models/items" , "controllers/get_unit", "models/share"]
+		assert_equal(expects, result)
+	end
+
+	#	指定ファイルが無い、または空
+	def	test_retrieveTestTargetWithNoFile
+		argv = ["test/sample", "-f", "dummy.txt" , "controllers/get_unit", "models/share"]
+
+		no_exists = false
+		begin
+			@cake_test_runner.retrieveTestTarget(argv)
+		rescue Errno::ENOENT
+			no_exists = true
+		end
+		#	「ファイルがない」例外ならばOK
+		assert(no_exists == true)
+
+		#	中身が空ならば当然、内容が返ってこない
+		argv = ["-f", "empty.txt", "controllers/get_unit", "models/share"]
+		result = @cake_test_runner.retrieveTestTarget(argv)
+		expects = ["controllers/get_unit", "models/share"]
+		assert_equal(expects, result)
+
+		argv = ["-f", "empty.txt"]
+		result = @cake_test_runner.retrieveTestTarget(argv)
+		expects = Array.new
+		assert_equal(expects, result)
+	end
+
+
 end

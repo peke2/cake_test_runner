@@ -212,4 +212,43 @@ class	CakeTestRunner
 		return	getCountByTypeName("pass")
 	end
 
+
+	#
+	#	引数で指定された文字列から実行対象テストのリストを取得
+	#
+	def	retrieveTestTarget(argv)
+		targets = Array.new
+
+		is_read_target = false
+		argv.each{ |arg|
+			if arg == "-f"
+				is_read_target = true
+			else
+				if is_read_target == true
+					targets.concat( parseLine(arg) )
+					is_read_target = false
+				else
+					targets << arg
+				end
+			end
+		}
+		return	targets
+	end
+
+
+	def	parseLine(file)
+		lines = Array.new
+
+		File.open(file){ |io|
+			io.readlines.each{ |line|
+				line.chomp!
+				if line.length > 0 
+					lines << line
+				end
+			}
+		}
+		return	lines
+	end
+	private	:parseLine
+
 end
